@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-activate gcloud
+. ~/.bashrc_gcloud
 #gcloud auth configure-docker
 docker build . --tag gcr.io/dechinezen/www
 docker push gcr.io/dechinezen/www
