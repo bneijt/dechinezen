@@ -18,7 +18,9 @@ RUN mkdir -p /opt/app
 WORKDIR /opt/app
 RUN apt-get update && apt-get install -y \
   ca-certificates \
-  libgmp-dev
+  && rm -rf /var/lib/apt/lists/*
 ENV PORT=8080
+USER daemon
 COPY --from=build /opt/build/.stack-work/install/x86_64-linux/*/*/bin .
+COPY static /opt/app/static
 CMD ["/opt/app/dechinezen-exe"]
