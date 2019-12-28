@@ -8,22 +8,18 @@ import Control.Monad.Trans
 import Data.IORef
 import Data.Monoid
 import qualified Data.Text as T
+import Network.Wai.Middleware.Static (staticPolicy, addBase)
 
 data MySession = EmptySession
-data MyAppState = DummyAppState (IORef Int)
 
 main :: IO ()
 main = do
     port <- getEnv "PORT"
-    ref <- newIORef 0
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (DummyAppState ref)
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase ()
     runSpock (read port :: Int) (spock spockCfg app)
 
-app :: SpockM () MySession MyAppState ()
-app =
-    do get root $
-           text "Hello World!"
-       get ("hello" <//> var) $ \name ->
-           do (DummyAppState ref) <- getState
-              visitorNumber <- liftIO $ atomicModifyIORef' ref $ \i -> (i+1, i+1)
-              text ("Hello " <> name <> ", you are visitor number " <> T.pack (show visitorNumber))
+
+app :: SpockM () MySession () ()
+app = do 
+    middleware $ staticPolicy (addBase "static")
+    get root $ file "text/html; charset=UTF-8" "static/index.html"

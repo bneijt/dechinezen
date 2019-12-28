@@ -37,6 +37,7 @@ executables:
     - Spock
     - text
     - mtl
+    - wai-middleware-static
 
 tests:
   dechinezen-test:
