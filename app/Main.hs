@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
-
+import Lib
 import Web.Spock
 import Web.Spock.Config
 import System.Environment (getEnv)
@@ -22,4 +22,4 @@ main = do
 app :: SpockM () MySession () ()
 app = do 
     middleware $ staticPolicy (addBase "static")
-    get root $ file "text/html; charset=UTF-8" "static/index.html"
+    get root $ html index
